@@ -106,11 +106,12 @@ class Plugin {
 	}
 
 	function get_file_payload( $value, $expiration = 0 ) {
-		$random_bytes = base64_encode( random_bytes( 10 ) );
+		$random_bytes = preg_replace( '![^a-z0-9]!', '', base64_encode( random_bytes( 15 ) ) );
+
 		return '<' . '?php ' .
 			'// Transient storage for WordPress' . "\n" .
 			( $expiration ?
-				"if ( time() > $expiration ) { @unlink(__FILE__); return false; }"
+				"if ( time() > $expiration ) { @unlink(__FILE__); return false; }\n"
 				:
 				''
 			) .
